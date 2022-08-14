@@ -1,0 +1,447 @@
+{
+  "System": {
+    "InputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input",
+    "TrainInputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input\\train",
+    "ValidInputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input\\valid",
+    "TestInputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input\\test",
+    "PredictionInputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input\\prediction",
+    "OutputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\output",
+    "Encoding": "utf-8",
+    "Visdom": "False",
+    "Deliminator":{
+      "CSV": ",",
+      "TSV": "\t"
+    },
+    "Header_pos": {
+      "iphone": 3,
+      "jetson": 0,
+      "Common": 0
+    },
+    "Analysis_Flags": {
+      "Filter": "True",
+      "FFT": "True",
+      "Wavelet": "False",
+      "Resample": "True"
+    },
+    "Export_Flags": {
+      "Filter": "False",
+      "FFT": "False",
+      "Wavelet": "False",
+      "Resample": "True"
+    }
+
+  },
+  "FilterSetting": {
+    "fpass": 4,
+    "fstop": 6,
+    "gpass": 3,
+    "gstop": 10
+  },
+  "FFTSetting": {
+    "f_sample": 10,
+    "split_t_r": 0.1,
+    "overlap": 0.7,
+    "delta_f": 0.1,
+    "window_F": {"Primary": "hamming",
+                  "Options": ["hanning", "hamming", "blackman"]
+    }
+  },
+  "ResampleSetting": {
+    "Fs_trans": 10
+  },
+
+  "LabelNames": {
+    "Time": {
+      "iphone": {
+        "Name": [
+          "Time"
+        ],
+        "Unit": [
+          "s"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Time"
+        ],
+        "Unit": [
+          "s"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Time"
+        ],
+        "Unit": [
+          "s"
+        ]
+      }
+    },
+
+    "SPD": {
+      "jetson": {
+        "Name": [
+          "VehicleSpeed_kph"
+        ],
+        "Unit": [
+          "kph"
+        ]
+      },
+      "iphone": {
+        "Name": [
+          "VehicleSpeed_kph"
+        ],
+        "Unit": [
+          "kph"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "SPD"
+        ],
+        "Unit": [
+          "kph"
+        ]
+      }
+    },
+
+    "GX": {
+      "iphone": {
+        "Name": [
+          "GX"
+        ],
+        "Unit": [
+          "m/s^2"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "GX"
+        ],
+        "Unit": [
+          "m/s^2"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "GX"
+        ],
+        "Unit": [
+          "G"
+        ]
+      }
+    },
+
+    "GY": {
+      "iphone": {
+        "Name": [
+          "GY"
+        ],
+        "Unit": [
+          "m/s^2"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "GY"
+        ],
+        "Unit": [
+          "m/s^2"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "GY"
+        ],
+        "Unit": [
+          "G"
+        ]
+      }
+    },
+
+    "GZ": {
+      "iphone": {
+        "Name": [
+          "GZ"
+        ],
+        "Unit": [
+          "m/s^2"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "GZ"
+        ],
+        "Unit": [
+          "m/s^2"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "GZ"
+        ],
+        "Unit": [
+          "G"
+        ]
+      }
+    },
+    "Roll_Rate": {
+      "iphone": {
+        "Name": [
+          "Roll_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Roll_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Roll_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      }
+    },
+    "Pitch_Rate": {
+      "iphone": {
+        "Name": [
+          "Pitch_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Pitch_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Pitch_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      }
+    },
+    "Yaw_Rate": {
+      "iphone": {
+        "Name": [
+          "Yaw_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Yaw_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Yaw_Rate"
+        ],
+        "Unit": [
+          "deg/s"
+        ]
+      }
+    },
+    "Mileage_m": {
+      "iphone": {
+        "Name": [
+          "Mileage_m"
+        ],
+        "Unit": [
+          "m"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Mileage"
+        ],
+        "Unit": [
+          "m"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Mileage"
+        ],
+        "Unit": [
+          "m"
+        ]
+      }
+    },
+    "Jx": {
+      "iphone": {
+        "Name": [
+          "Jx"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Jx"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Jx"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      }
+    },
+    "Jy": {
+      "iphone": {
+        "Name": [
+          "Jy"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Jy"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Jy"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      }
+    },
+    "Comp_J": {
+      "iphone": {
+        "Name": [
+          "Comp_J"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Comp_J"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Comp_J"
+        ],
+        "Unit": [
+          "g/s"
+        ]
+      }
+    },
+    "Comp_G": {
+      "iphone": {
+        "Name": [
+          "Comp_G"
+        ],
+        "Unit": [
+          "G"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Comp_G"
+        ],
+        "Unit": [
+          "G"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Comp_G"
+        ],
+        "Unit": [
+          "G"
+        ]
+      }
+    }
+  },
+  "Prepro": {
+    "drop_label": [
+      "Time","Rank"
+    ],
+    "use_label":[
+      "Speed", "Mag_LinearG"
+    ],
+    "target": "Rank"
+  },
+  "LabelNameList": {
+    "TrueLabel": ["Plain", "Vehicle", "Train"],
+    "PredLabel": ["Plain", "Vehicle", "Train"]
+  },
+
+  "ModelParams": {
+    "LR_Finder_Flag": "False",
+    "input_dim": 2,
+    "num_classes": 3,
+    "workers": 1,
+    "batch_size": 16,
+    "epochs": 50,
+    "lr":  5e-4,
+    "momentum": 0.9,
+    "weight_decay": 1e-1,
+    "split": 0.2,
+    "scheduler_flag": "False",
+    "scheduler_gamma": 0.95,
+    "out_dim": 3,
+    "hidden_dim": 128,
+    "num_lstm_layer": 1,
+    "dropout_ratio": 0,
+    "max_norm": 100,
+    "classification": "True"
+  },
+  "HP_Optim":{
+    "start_batch_size": 2,
+    "end_batch_size": 16,
+    "start_epochs": 100,
+    "end_epochs": 500,
+    "start_lr": 1e-5,
+    "end_lr": 1e-3,
+    "start_weight_decay": 1e-5,
+    "end_weight_decay": 1e-1,
+    "start_hidden_dim": 64,
+    "end_hidden_dim": 128,
+    "start_num_lstm_layer": 1,
+    "end_num_lstm_layer": 2,
+    "start_dropout_ratio": 0.01,
+    "end_dropout_ratio": 0.5
+}
+}
