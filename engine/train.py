@@ -201,14 +201,6 @@ def train_model(settings, model, optimizer, loss_fn, num_epoch, scheduler, train
                              update='append'
                     )
 
-
-            # Plot confusion matrix in visdom
-            # ABCDE = 01234
-            logger.heatmap(train_confusion, win='4', opts=dict(
-                title="Train_Confusion_Matrix_epoch_{}".format(epoch),
-                columnnames=["A", "B", "C", "D", "E"],
-                rownames=["A", "B", "C", "D", "E"])
-                           )
     print('-'*50)
     print('save model...')
     #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '\\models\\LSTM_Model.pt')

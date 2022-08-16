@@ -56,19 +56,4 @@ def validation(settings, model, val_loader, loss_fn, cur_epoch, max_epoch, logge
     )
     )
 
-
-
-
-
-    Isvisdom = eval(settings.config['System']['Visdom'])
-    if Isvisdom:
-        # Plot confusion matrix in visdom
-        # ABCDE = 01234
-        logger.heatmap(confusion, win='5', opts=dict(
-            title="Valid_Confusion_Matrix_epoch_{}".format(cur_epoch),
-            columnnames=["A", "B", "C", "D", "E"],
-            rownames=["A", "B", "C", "D", "E"])
-                       )
-
-
     return avg_valid_loss, acc, precision, recall, f1, confusion

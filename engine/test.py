@@ -51,14 +51,6 @@ def testing(settings, model, test_loader, loss_fn, logger):
         )
     )
 
-    if Isvisdom:
-        # Plot confusion matrix in visdom
-        # ABCDE = 01234
-        logger.heatmap(confusion, win='10', opts=dict(
-            title="Test_Confusion_Matrix",
-            columnnames=["A", "B", "C", "D", "E"],
-            rownames=["A", "B", "C", "D", "E"])
-                       )
     testgraph(avg_test_loss, f1, confusion, settings)
 
     return avg_test_loss, acc
