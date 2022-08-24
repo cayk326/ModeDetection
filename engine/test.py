@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from .make_graph import testgraph
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, f1_score, precision_score
-from ModeDetection.util.tools import get_confusion_matrix
+from util.tools import get_confusion_matrix
 
 
 def testing(settings, model, test_loader, loss_fn, logger):

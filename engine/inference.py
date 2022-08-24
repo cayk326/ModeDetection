@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score, classification_report, confusion_matrix
-from ModeDetection.util.tools import get_confusion_matrix
+from util.tools import get_confusion_matrix
 import random
 import os
 seed = 32

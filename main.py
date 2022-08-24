@@ -35,7 +35,13 @@ g.manual_seed(seed)
 
 class Settings:
     def __init__(self):
-        self.confpath = r"D:\PythonCode\ModeDetection\config\config.json"
+        docker_workspace_config_dir = "/workspaces/ModeDetection/config/config.json"
+        workspace_config_dir = "D:\PythonCode\ModeDetection\config\config.json"
+        Isdocker = False
+        if Isdocker:
+            self.confpath = docker_workspace_config_dir
+        else:
+            self.confpath = workspace_config_dir
         self.config = None
         self.all_files_path = None
 

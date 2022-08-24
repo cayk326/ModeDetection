@@ -1,11 +1,11 @@
 {
   "System": {
-    "InputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input",
-    "TrainInputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input\\train",
-    "ValidInputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input\\valid",
-    "TestInputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input\\test",
-    "PredictionInputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\input\\prediction",
-    "OutputFileDir": "D:\\PythonCode\\ModeDetection\\Data\\output",
+    "InputFileDir": "/workspaces/ModeDetection/Data/input",
+    "TrainInputFileDir": "/workspaces/ModeDetection/Data/input/train",
+    "ValidInputFileDir": "/workspaces/ModeDetection/Data/input/valid",
+    "TestInputFileDir": "/workspaces/ModeDetection/Data/input/test",
+    "PredictionInputFileDir": "/workspaces/ModeDetection/Data/input/prediction",
+    "OutputFileDir": "/workspaces/ModeDetection/Data/output",
     "Encoding": "utf-8",
     "Visdom": "False",
     "Deliminator":{

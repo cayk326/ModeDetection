@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from .inference import validation
 import numpy as np
 from .make_graph import traingraph
-from ModeDetection.util.tools import get_confusion_matrix
+from util.tools import get_confusion_matrix
 from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score, confusion_matrix
 import json
 import datetime
