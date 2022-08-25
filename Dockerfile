@@ -67,5 +67,5 @@ COPY requirements.txt /tmp/
 RUN pip install --no-cache-dir -U pip setuptools wheel \
     && pip install --no-cache-dir -r /tmp/requirements.txt
 
-
+# depends on what version of torch you want to install. see https://pytorch.org/get-started/locally/
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116

@@ -14,7 +14,7 @@ from models import LSTM_Classification
 from engine.train import train_model
 import numpy as np
 import random
-os.environ['CUDA_LAUNCH_BLOCKING'] = '1' #  There are always errors below  shape  atypism 
+#os.environ['CUDA_LAUNCH_BLOCKING'] = '1' #  There are always errors below  shape  atypism 
 
 seed = 32
 random.seed(seed)

@@ -23,10 +23,13 @@ from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, f1_s
 # import visdom
 import statistics
 
-
+Isdocker = True
 class Settings:
     def __init__(self):
-        self.confpath = r"D:\PythonCode\ModeDetection\config\config.json"
+        if Isdocker:
+            self.confpath = "/workspaces/ModeDetection/config/config_docker.json"
+        else:
+            self.confpath = "D:/PythonCode/ModeDetection/config/config.json"
         self.config = None
         self.all_files_path = None
 
@@ -114,8 +117,8 @@ def pred_main():
     settings.config = jsonfileparser(settings.confpath)
 
     print("Creating test dataset file list")
-    x_test_dataset_list = GetAllFileList(settings.config["System"]["PredictionInputFileDir"] + '\\x_test', '*.csv')
-    y_test_dataset_list = GetAllFileList(settings.config["System"]["PredictionInputFileDir"] + '\\y_test', '*.csv')
+    x_test_dataset_list = GetAllFileList(settings.config["System"]["PredictionInputFileDir"] + '/x_test', '*.csv')
+    y_test_dataset_list = GetAllFileList(settings.config["System"]["PredictionInputFileDir"] + '/y_test', '*.csv')
 
     print('-------------------Dataset Information----------------------')
     print("Number of x_test dataset {0}".format(len(x_test_dataset_list)))
@@ -153,7 +156,7 @@ def pred_main():
                                                dropout_ratio=0,
                                                classification=settings.config["ModelParams"]["classification"])
 
-        load_model(settings.config["System"]["OutputFileDir"] + '\\models\\LSTM_Model.pt', tuned_model)
+        load_model(settings.config["System"]["OutputFileDir"] + '/models/LSTM_Model.pt', tuned_model)
         loss_fn = nn.CrossEntropyLoss()
 
         tuned_model.to(DEVICE)

@@ -1,11 +1,14 @@
+from ast import IsNot
 import collections
+from distutils.debug import DEBUG
+import multiprocessing
 import seaborn as sns; sns.set()
 import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
-
+import subprocess
 from util.preprocessing import generate_batch, batch_norm
 from util.load_dataset import GetAllFileList, jsonfileparser, TrainDataset, TestDataset, ValidDataset
 from models import LSTM_Classification
@@ -34,27 +37,30 @@ def seed_worker(worker_id):
 g = torch.Generator()
 g.manual_seed(seed)
 
-
+Isdocker = True
 class Settings:
     def __init__(self):
-        self.confpath = r"D:\PythonCode\ModeDetection\config\config.json"
+        if Isdocker:
+            self.confpath = "/workspaces/ModeDetection/config/config_docker.json"
+        else:
+            self.confpath = "D:/PythonCode/ModeDetection/config/config.json"
         self.config = None
         self.all_files_path = None
 
-def main():
+def optmain():
     print("Start Main")
     settings = Settings()
 
     settings.config = jsonfileparser(settings.confpath)
     print("Creating dataset file list")
-    x_train_dataset_list = GetAllFileList(settings.config["System"]["TrainInputFileDir"] + '\\x_train', '*.csv')
-    y_train_dataset_list = GetAllFileList(settings.config["System"]["TrainInputFileDir"] + '\\y_train', '*.csv')
+    x_train_dataset_list = GetAllFileList(settings.config["System"]["TrainInputFileDir"] + '/x_train', '*.csv')
+    y_train_dataset_list = GetAllFileList(settings.config["System"]["TrainInputFileDir"] + '/y_train', '*.csv')
 
-    x_valid_dataset_list = GetAllFileList(settings.config["System"]["ValidInputFileDir"] + '\\x_valid', '*.csv')
-    y_valid_dataset_list = GetAllFileList(settings.config["System"]["ValidInputFileDir"] + '\\y_valid', '*.csv')
+    x_valid_dataset_list = GetAllFileList(settings.config["System"]["ValidInputFileDir"] + '/x_valid', '*.csv')
+    y_valid_dataset_list = GetAllFileList(settings.config["System"]["ValidInputFileDir"] + '/y_valid', '*.csv')
 
-    x_test_dataset_list = GetAllFileList(settings.config["System"]["TestInputFileDir"] + '\\x_test', '*.csv')
-    y_test_dataset_list = GetAllFileList(settings.config["System"]["TestInputFileDir"] + '\\y_test', '*.csv')
+    x_test_dataset_list = GetAllFileList(settings.config["System"]["TestInputFileDir"] + '/x_test', '*.csv')
+    y_test_dataset_list = GetAllFileList(settings.config["System"]["TestInputFileDir"] + '/y_test', '*.csv')
 
     print('-------------------Dataset Information----------------------')
     print("Number of x_train dataset {0}".format(len(x_train_dataset_list)))
@@ -102,11 +108,6 @@ def hyper_param_optimization(train_dataset, val_dataset, settings, seq_len, feat
         DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         print("DEVICE is {0}".format(DEVICE))
 
-
-        #BATCH_SIZE = 16
-        #NUM_EPOCHS = 500
-        #HIDDEN_DIM = 64
-        #LSTM_LAYER = 1
 
         BATCH_SIZE = trial.suggest_int("BATCH_SIZE", settings.config["HP_Optim"]["start_batch_size"],
                                               settings.config["HP_Optim"]["end_batch_size"])
@@ -201,7 +202,7 @@ def hyper_param_optimization(train_dataset, val_dataset, settings, seq_len, feat
 
         #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '\\models\\'  +'trialID_' + str(trial._trial_id) + '_LSTM_Model.pt')
         torch.jit.script(model).save(
-            settings.config["System"]["OutputFileDir"] + '\\models\\' + 'trialID_' + str(trial._trial_id) + '_LSTM_Model.pt')
+            settings.config["System"]["OutputFileDir"] + '/models/' + 'trialID_' + str(trial._trial_id) + '_LSTM_Model.pt')
 
         return (-1) * res_val_f1[-1]#res_val_loss[-1]
 
@@ -209,16 +210,18 @@ def hyper_param_optimization(train_dataset, val_dataset, settings, seq_len, feat
     TPE base Bayesian optimization
 
     """
-    study_name = "optimization_LSTM_No1"
-    storage = "sqlite:///optimization_LSTM_No1.db"
+    study_name = "optimization"
+    storage = "sqlite:///optimization.db"
 
     pruner = optuna.pruners.SuccessiveHalvingPruner(min_resource=100)
     #sampler = optuna.samplers.TPESampler()# TPE method
     sampler = optuna.samplers.CmaEsSampler()  # CmaEs method
-    timeout = 60 * 60 * 10  # 2時間 #600#10分
+    timeout = 60 * 60 * settings.config["HP_Optim"]["optim_time_hour"]
     # timeout=600
     # n_trials = 50
     # sampler = optuna.samplers.CmaEsSampler()
+
+    subprocess.Popen(["optuna-dashboard", storage])
     study = optuna.create_study(direction="minimize", study_name=study_name, storage=storage, load_if_exists=True,
                                 sampler=sampler, pruner=pruner)
     # study.optimize(objective, n_trials=50)
@@ -231,6 +234,20 @@ def hyper_param_optimization(train_dataset, val_dataset, settings, seq_len, feat
 
 if __name__ == '__main__':
     import datetime
-    print("start optimization")
+    import threading
+    DEBUGMode = False
+    THREAD_NUM = 5
+
     print(str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_"))
-    main()
+    thread_list = []
+    if DEBUGMode == False:
+        for i in range(THREAD_NUM):
+            thread_list.append(threading.Thread(target=optmain))
+        for i in range(THREAD_NUM):
+            thread_list[i].start()
+        
+        print('Optimization was finished.')
+    else:
+        print('Debug mode')
+        optmain()
+

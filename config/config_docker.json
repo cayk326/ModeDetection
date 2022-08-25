@@ -413,17 +413,17 @@
     "input_dim": 1,
     "num_classes": 3,
     "workers": 1,
-    "batch_size": 16,
-    "epochs": 5,
-    "lr":  5e-5,
+    "batch_size": 26,
+    "epochs": 57,
+    "lr":  7.181962529286704e-05,
     "momentum": 0.9,
     "weight_decay": 1e-1,
     "split": 0.2,
     "scheduler_flag": "False",
     "scheduler_gamma": 0.95,
     "out_dim": 3,
-    "hidden_dim": 64,
-    "num_lstm_layer": 1,
+    "hidden_dim": 98,
+    "num_lstm_layer": 2,
     "dropout_ratio": 0,
     "max_norm": 100,
     "classification": "True"
@@ -442,6 +442,7 @@
     "start_num_lstm_layer": 1,
     "end_num_lstm_layer": 2,
     "start_dropout_ratio": 0.01,
-    "end_dropout_ratio": 0.5
-}
+    "end_dropout_ratio": 0.5,
+    "optim_time_hour" : 1
+  }
 }
