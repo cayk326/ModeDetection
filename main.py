@@ -14,7 +14,7 @@ from models import LSTM_Classification
 from engine.train import train_model
 import numpy as np
 import random
-
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1' #  There are always errors below  shape  atypism 
 
 seed = 32
 random.seed(seed)
@@ -23,7 +23,7 @@ torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
-os.environ['PYTHONHASHSEED'] = str(seed)
+#os.environ['PYTHONHASHSEED'] = str(seed)
 
 def seed_worker(worker_id):
     worker_seed = torch.initial_seed() % 2**32
@@ -32,16 +32,14 @@ def seed_worker(worker_id):
 
 g = torch.Generator()
 g.manual_seed(seed)
+Isdocker = True
 
 class Settings:
     def __init__(self):
-        docker_workspace_config_dir = "/workspaces/ModeDetection/config/config.json"
-        workspace_config_dir = "D:\PythonCode\ModeDetection\config\config.json"
-        Isdocker = False
         if Isdocker:
-            self.confpath = docker_workspace_config_dir
+            self.confpath = "/workspaces/ModeDetection/config/config_docker.json"
         else:
-            self.confpath = workspace_config_dir
+            self.confpath = "D:/PythonCode/ModeDetection/config/config.json"
         self.config = None
         self.all_files_path = None
 
@@ -51,14 +49,14 @@ def main():
 
     settings.config = jsonfileparser(settings.confpath)
     print("Creating dataset file list")
-    x_train_dataset_list = GetAllFileList(settings.config["System"]["TrainInputFileDir"] + '\\x_train', '*.csv')
-    y_train_dataset_list = GetAllFileList(settings.config["System"]["TrainInputFileDir"] + '\\y_train', '*.csv')
+    x_train_dataset_list = GetAllFileList(settings.config["System"]["TrainInputFileDir"] + '/x_train', '*.csv')
+    y_train_dataset_list = GetAllFileList(settings.config["System"]["TrainInputFileDir"] + '/y_train', '*.csv')
 
-    x_valid_dataset_list = GetAllFileList(settings.config["System"]["ValidInputFileDir"] + '\\x_valid', '*.csv')
-    y_valid_dataset_list = GetAllFileList(settings.config["System"]["ValidInputFileDir"] + '\\y_valid', '*.csv')
+    x_valid_dataset_list = GetAllFileList(settings.config["System"]["ValidInputFileDir"] + '/x_valid', '*.csv')
+    y_valid_dataset_list = GetAllFileList(settings.config["System"]["ValidInputFileDir"] + '/y_valid', '*.csv')
 
-    x_test_dataset_list = GetAllFileList(settings.config["System"]["TestInputFileDir"] + '\\x_test', '*.csv')
-    y_test_dataset_list = GetAllFileList(settings.config["System"]["TestInputFileDir"] + '\\y_test', '*.csv')
+    x_test_dataset_list = GetAllFileList(settings.config["System"]["TestInputFileDir"] + '/x_test', '*.csv')
+    y_test_dataset_list = GetAllFileList(settings.config["System"]["TestInputFileDir"] + '/y_test', '*.csv')
 
     print('-------------------Dataset Information----------------------')
     print("Number of x_train dataset {0}".format(len(x_train_dataset_list)))
@@ -172,7 +170,7 @@ def main():
         test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=settings.config["ModelParams"]["batch_size"], shuffle=False)
         from engine import test
         print('Load Jitted Model...')
-        tuned_model = torch.jit.load(settings.config["System"]["OutputFileDir"] + '\\models\\Jitted_LSTM_Model.pt')
+        tuned_model = torch.jit.load(settings.config["System"]["OutputFileDir"] + '/models/Jitted_LSTM_Model.pt')
         print('Load Jitted Model completed!')
         tuned_model.to(DEVICE)
 

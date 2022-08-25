@@ -162,8 +162,8 @@ def train_model(settings, model, optimizer, loss_fn, num_epoch, scheduler, train
 
         if val_acc_best < val_acc:
             val_acc_best = val_acc
-            #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '\\models\\' + str(epoch) +'_LSTM_Model.pt')
-            torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '\\models\\' + 'Gen' + str(epoch) + '_Jitted_LSTM_Model.pt')
+            #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '/models/' + str(epoch) +'_LSTM_Model.pt')
+            torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '/models/' + 'Gen' + str(epoch) + '_Jitted_LSTM_Model.pt')
 
         # 訓練モードに戻す
         model.train()
@@ -203,8 +203,8 @@ def train_model(settings, model, optimizer, loss_fn, num_epoch, scheduler, train
 
     print('-'*50)
     print('save model...')
-    #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '\\models\\LSTM_Model.pt')
-    torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '\\models\\Jitted_LSTM_Model.pt')
+    #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '/models/LSTM_Model.pt')
+    torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '/models/Jitted_LSTM_Model.pt')
     print('model was saved completely')
 
     #グラフ化
@@ -213,9 +213,9 @@ def train_model(settings, model, optimizer, loss_fn, num_epoch, scheduler, train
     summary = pd.DataFrame({'Epoch': [i + 1 for i in range(epoch)], 'TrainLoss': res_train_loss, 'TrainAcc':res_train_acc,
                             'TrainPrecision':res_train_precision, 'TrainRecall': res_train_recall, 'TrainF1':res_train_f1,
                             'ValLoss':res_val_loss, 'ValAcc':res_val_acc, 'ValPrecision': res_val_precision, 'Val_Recall': res_val_recall, 'ValF1': res_val_f1})
-    summary.to_csv(settings.config["System"]["OutputFileDir"]+ '\\' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") +'_TrainingSummary.csv')
+    summary.to_csv(settings.config["System"]["OutputFileDir"]+ '/' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") +'_TrainingSummary.csv')
 
-    config_file = open(settings.config["System"]["OutputFileDir"]+ '\\' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") + "_Settings.json", "w")
+    config_file = open(settings.config["System"]["OutputFileDir"]+ '/' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") + "_Settings.json", "w")
     json.dump(settings.config, config_file)
     config_file.close()
 

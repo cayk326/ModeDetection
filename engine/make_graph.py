@@ -54,7 +54,7 @@ def traingraph(x_axis_epoch,res_train_loss, res_train_score, res_val_loss, res_v
     ax4.set_ylabel("Ture Label")
     ax4.set_xlabel("Predicted Label")
     fig.tight_layout()
-    fig.savefig(settings.config["System"]["OutputFileDir"]+ '\\' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") + "_TrainingResult.png")
+    fig.savefig(settings.config["System"]["OutputFileDir"]+ '/' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") + "_TrainingResult.png")
     plt.close(fig)
 
 def testgraph(loss, score, test_confusion, settings):
@@ -77,7 +77,7 @@ def testgraph(loss, score, test_confusion, settings):
     ax1.set_xlabel("Predicted Label")
 
 
-    fig.savefig(settings.config["System"]["OutputFileDir"]+ '\\' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") + "_TestResult.png")
+    fig.savefig(settings.config["System"]["OutputFileDir"]+ '/' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") + "_TestResult.png")
 
 
 def predgraph(score, pred_confusion, settings):
@@ -100,4 +100,4 @@ def predgraph(score, pred_confusion, settings):
     ax1.set_xlabel("Predicted Label")
 
 
-    fig.savefig(settings.config["System"]["OutputFileDir"]+ '\\' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") + "_PredResult.png")
+    fig.savefig(settings.config["System"]["OutputFileDir"]+ '/' + str(datetime.datetime.now()).replace("-","").replace(" ","_").replace(":","").replace(".","_") + "_PredResult.png")
