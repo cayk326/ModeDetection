@@ -392,6 +392,32 @@
           "G"
         ]
       }
+    },
+    "Mag_LinearG": {
+      "iphone": {
+        "Name": [
+          "Mag_LinearG"
+        ],
+        "Unit": [
+          "G"
+        ]
+      },
+      "jetson": {
+        "Name": [
+          "Mag_LinearG"
+        ],
+        "Unit": [
+          "G"
+        ]
+      },
+      "Common": {
+        "Name": [
+          "Mag_LinearG"
+        ],
+        "Unit": [
+          "G"
+        ]
+      }
     }
   },
   "Prepro": {
@@ -404,45 +430,47 @@
     "target": "Label"
   },
   "LabelNameList": {
-    "TrueLabel": ["Walk", "Vehicle", "Shinkansen"],
-    "PredLabel": ["Walk", "Vehicle", "Shinkansen"]
+    "TrueLabel": ["Walk", "Vehicle", "Run", "Stair"],
+    "PredLabel": ["Walk", "Vehicle", "Run", "Stair"]
   },
 
   "ModelParams": {
     "LR_Finder_Flag": "False",
     "input_dim": 1,
-    "num_classes": 3,
+    "num_classes": 4,
     "workers": 1,
-    "batch_size": 26,
-    "epochs": 57,
+    "batch_size": 16,
+    "epochs": 5,
     "lr":  7.181962529286704e-05,
     "momentum": 0.9,
     "weight_decay": 1e-1,
     "split": 0.2,
     "scheduler_flag": "False",
     "scheduler_gamma": 0.95,
-    "out_dim": 3,
+    "out_dim": 4,
     "hidden_dim": 98,
-    "num_lstm_layer": 2,
+    "num_layer": 2,
     "dropout_ratio": 0,
     "max_norm": 100,
-    "classification": "True"
+    "classification": "True",
+    "ModelList": ["LSTM", "GRU"],
+    "Model": "LSTM"
   },
   "HP_Optim":{
-    "start_batch_size": 16,
+    "start_batch_size": 8,
     "end_batch_size": 32,
     "start_epochs": 10,
     "end_epochs": 100,
     "start_lr": 1e-5,
-    "end_lr": 1e-3,
+    "end_lr": 1e-2,
     "start_weight_decay": 1e-5,
     "end_weight_decay": 1e-1,
     "start_hidden_dim": 64,
     "end_hidden_dim": 128,
-    "start_num_lstm_layer": 1,
-    "end_num_lstm_layer": 2,
+    "start_num_layer": 1,
+    "end_num_layer": 2,
     "start_dropout_ratio": 0.01,
     "end_dropout_ratio": 0.5,
-    "optim_time_hour" : 1
+    "optim_time_hour" : 2
   }
 }

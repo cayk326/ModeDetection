@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import subprocess
 from util.preprocessing import generate_batch, batch_norm
 from util.load_dataset import GetAllFileList, jsonfileparser, TrainDataset, TestDataset, ValidDataset
-from models import LSTM_Classification
+from models import LSTM, GRU
 from engine.train import train_model
 import numpy as np
 import transformers.optimization as Trans_optim
@@ -117,8 +117,8 @@ def hyper_param_optimization(train_dataset, val_dataset, settings, seq_len, feat
         HIDDEN_DIM = trial.suggest_int("HIDDEN_DIM", settings.config["HP_Optim"]["start_hidden_dim"],
                                                settings.config["HP_Optim"]["end_hidden_dim"])
 
-        LSTM_LAYER = trial.suggest_int("LSTM_LAYER", settings.config["HP_Optim"]["start_num_lstm_layer"],
-                                               settings.config["HP_Optim"]["end_num_lstm_layer"])
+        NUM_LAYER = trial.suggest_int("LSTM_LAYER", settings.config["HP_Optim"]["start_num_layer"],
+                                               settings.config["HP_Optim"]["end_num_layer"])
 
         LR = trial.suggest_loguniform("LR", settings.config["HP_Optim"]["start_lr"],
                                                settings.config["HP_Optim"]["end_lr"])
@@ -143,26 +143,26 @@ def hyper_param_optimization(train_dataset, val_dataset, settings, seq_len, feat
         scheduler = None
 
         print("HIDDEN_DIM is: " + str(HIDDEN_DIM))
-        print("LSTM_LAYER is: " + str(LSTM_LAYER))
+        print("NUM_LAYER is: " + str(NUM_LAYER))
         print("BATCH_SIZE is: " + str(BATCH_SIZE))
         print("NUM_EPOCHS is: " + str(NUM_EPOCHS))
         print("LR is: " + str(LR))
         print("DROPOUT_RATIO is: " + str(DROPOUT_RATIO))
         #print("WEIGHT_DECAY is " + str(WEIGHT_DECAY))
 
-        LSTM_Model = LSTM_Classification.LSTM(seq_len=seq_len,
-                                              feature_size=feature_size,
-                                              hidden_dim=HIDDEN_DIM,
-                                              num_lstm_layers=LSTM_LAYER,
-                                              out_dim=out_dim,
-                                              dropout_ratio=DROPOUT_RATIO,
-                                              classification=settings.config["ModelParams"]["classification"]
-                                              )
+        Model = LSTM.LSTMwithFC(
+                                feature_size=feature_size,
+                                hidden_dim=HIDDEN_DIM,
+                                num_layers=NUM_LAYER,
+                                out_dim=out_dim,
+                                dropout_ratio=DROPOUT_RATIO,
+                                classification=settings.config["ModelParams"]["classification"]
+                                )
 
 
 
-        LSTM_Model.to(DEVICE)
-        optimizer = optim.AdamW(LSTM_Model.parameters(), lr=LR)
+        Model.to(DEVICE)
+        optimizer = optim.AdamW(Model.parameters(), lr=LR)
         loss_fn = nn.CrossEntropyLoss()
 
 
@@ -191,18 +191,18 @@ def hyper_param_optimization(train_dataset, val_dataset, settings, seq_len, feat
             )
 
 
-        LSTM_Model.train()
-        LSTM_Model.to(DEVICE)
+        Model.train()
+        Model.to(DEVICE)
 
-        model, res_train_loss, res_train_acc, res_val_loss, res_val_acc, res_train_f1, res_val_f1 = train_model(settings, LSTM_Model, optimizer, loss_fn, NUM_EPOCHS, scheduler, train_loader, val_loader, logger)
+        model, res_train_loss, res_train_acc, res_val_loss, res_val_acc, res_train_f1, res_val_f1 = train_model(settings, Model, optimizer, loss_fn, NUM_EPOCHS, scheduler, train_loader, val_loader, logger)
         """
         ハイパーパラメータチューニング結果の情報を出力
         trial._trial_id
         """
 
-        #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '\\models\\'  +'trialID_' + str(trial._trial_id) + '_LSTM_Model.pt')
+        #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '\\models\\'  +'trialID_' + str(trial._trial_id) + '_Model.pt')
         torch.jit.script(model).save(
-            settings.config["System"]["OutputFileDir"] + '/models/' + 'trialID_' + str(trial._trial_id) + '_LSTM_Model.pt')
+            settings.config["System"]["OutputFileDir"] + '/models/' + 'trialID_' + str(trial._trial_id) + '_Model.pt')
 
         return (-1) * res_val_f1[-1]#res_val_loss[-1]
 

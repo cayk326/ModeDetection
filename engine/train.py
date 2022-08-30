@@ -162,8 +162,8 @@ def train_model(settings, model, optimizer, loss_fn, num_epoch, scheduler, train
 
         if val_acc_best < val_acc:
             val_acc_best = val_acc
-            #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '/models/' + str(epoch) +'_LSTM_Model.pt')
-            torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '/models/' + 'Gen' + str(epoch) + '_Jitted_LSTM_Model.pt')
+            #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '/models/' + str(epoch) +'_Model.pt')
+            torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '/models/' + 'Gen' + str(epoch) + '_Jitted_Model.pt')
 
         # 訓練モードに戻す
         model.train()
@@ -203,8 +203,8 @@ def train_model(settings, model, optimizer, loss_fn, num_epoch, scheduler, train
 
     print('-'*50)
     print('save model...')
-    #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '/models/LSTM_Model.pt')
-    torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '/models/Jitted_LSTM_Model.pt')
+    #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '/models/Model.pt')
+    torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '/models/Jitted_Model.pt')
     print('model was saved completely')
 
     #グラフ化

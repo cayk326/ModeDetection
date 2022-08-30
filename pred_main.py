@@ -98,16 +98,7 @@ def prediction(settings, model, test_loader, loss_fn):
         import collections
         print('model returned multiple value as prediction')
         final_pred_label = collections.Counter(pred_label_list).most_common()[0][0]
-    '''
-    # Plot confusion matrix in visdom
-    # ABCDE = 01234
-    logger.heatmap(confusion, win='10', opts=dict(
-        title="Test_Confusion_Matrix",
-        columnnames=["A", "B", "C", "D", "E"],
-        rownames=["A", "B", "C", "D", "E"])
-                   )
 
-    '''
     return avg_test_loss, acc, final_pred_label
 
 
@@ -148,29 +139,23 @@ def pred_main():
 
         print('------------------Model Configuration-----------------------')
         DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        tuned_model = LSTM_Classification.LSTM(seq_len=x_test_batch.shape[1],
-                                               feature_size=x_test_batch.shape[2],
-                                               hidden_dim=settings.config["ModelParams"]["hidden_dim"],
-                                               num_lstm_layers=settings.config["ModelParams"]["num_lstm_layer"],
-                                               out_dim=settings.config["ModelParams"]["out_dim"],
-                                               dropout_ratio=0,
-                                               classification=settings.config["ModelParams"]["classification"])
-
-        load_model(settings.config["System"]["OutputFileDir"] + '/models/LSTM_Model.pt', tuned_model)
+    
+        model = torch.jit.load(settings.config["System"]["OutputFileDir"] + '/models/production/Prediction_Model.pt')
+        print('Load Jitted Model completed!')
+        model.to(DEVICE)
         loss_fn = nn.CrossEntropyLoss()
 
-        tuned_model.to(DEVICE)
-        avg_test_loss, acc, final_pred_label = prediction(settings, tuned_model, test_loader, loss_fn)
+        avg_test_loss, acc, final_pred_label = prediction(settings, model, test_loader, loss_fn)
         Final_confusion[int(y_test_batch[0]), int(final_pred_label)] += 1  # rows行 cols列に1を加算。rowsは正解値、colsは予測値
         final_pred_label_list.append(int(final_pred_label))
         final_true_label_list.append(int(y_test_batch[0]))
 
         if final_pred_label == 0:
-            print('You are AA Rank...pred label is {0}'.format(final_pred_label))
+            print('Walk...pred label is {0}'.format(final_pred_label))
         elif final_pred_label == 1:
-            print('You are BB Rank...pred label is {0}'.format(final_pred_label))
+            print('Vehicle...pred label is {0}'.format(final_pred_label))
         elif final_pred_label == 2:
-            print('You are CC Rank...pred label is {0}'.format(final_pred_label))
+            print('Shinkansen Rank...pred label is {0}'.format(final_pred_label))
         elif final_pred_label == 3:
             print('You are DD Rank...pred label is {0}'.format(final_pred_label))
         else:

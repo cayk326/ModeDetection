@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 from util.preprocessing import generate_batch, batch_norm
 from util.load_dataset import GetAllFileList, jsonfileparser, TrainDataset, TestDataset, ValidDataset
-from models import LSTM_Classification
+from models import LSTM, GRU
 from engine.train import train_model
 import numpy as np
 import random
@@ -95,20 +95,36 @@ def main():
     print('------------------Model Configuration-----------------------')
     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print('Use device: {0}'.format(DEVICE))
-    LSTM_Model = LSTM_Classification.LSTM(seq_len=x_train_batch.shape[1],
-                                          feature_size=x_train_batch.shape[2],
-                                          hidden_dim=settings.config["ModelParams"]["hidden_dim"],
-                                          num_lstm_layers=settings.config["ModelParams"]["num_lstm_layer"],
-                                          out_dim=settings.config["ModelParams"]["out_dim"],
-                                          dropout_ratio=settings.config["ModelParams"]["dropout_ratio"],
-                                          classification=settings.config["ModelParams"]["classification"]
-                                          )
-    LSTM_Model.to(DEVICE)
-    optimizer = optim.AdamW(LSTM_Model.parameters(), lr=settings.config["ModelParams"]["lr"])
+    if settings.config["ModelParams"]["Model"] == "LSTM":
+        Model = LSTM.LSTMwithFC(
+                                feature_size=x_train_batch.shape[2],
+                                hidden_dim=settings.config["ModelParams"]["hidden_dim"],
+                                num_layers=settings.config["ModelParams"]["num_layer"],
+                                out_dim=settings.config["ModelParams"]["out_dim"],
+                                dropout_ratio=settings.config["ModelParams"]["dropout_ratio"],
+                                classification=settings.config["ModelParams"]["classification"]
+                                )
+    elif settings.config["ModelParams"]["Model"] == "GRU":
+        Model = GRU.GRUwithFC(
+                              feature_size=x_train_batch.shape[2],
+                              hidden_dim=settings.config["ModelParams"]["hidden_dim"],
+                              num_layers=settings.config["ModelParams"]["num_layer"],
+                              out_dim=settings.config["ModelParams"]["out_dim"],
+                              dropout_ratio=settings.config["ModelParams"]["dropout_ratio"],
+                              classification=settings.config["ModelParams"]["classification"]
+                            )
+    else:
+        print("Error. Please select certain model name on the config file.")
+        exit()
+    print("----Your model----")
+    print(Model)
+    
+    Model.to(DEVICE)
+    optimizer = optim.AdamW(Model.parameters(), lr=settings.config["ModelParams"]["lr"])
     loss_fn = nn.CrossEntropyLoss()
 
-    LSTM_Model.train()
-    LSTM_Model.to(DEVICE)
+    Model.train()
+    Model.to(DEVICE)
 
     import transformers.optimization as Trans_optim
     LRFinderFlag=settings.config['ModelParams']['LR_Finder_Flag']
@@ -139,8 +155,9 @@ def main():
     Isvisdom = eval(settings.config['System']['Visdom'])
     if Isvisdom:
         import visdom
+        import subprocess
+        #subprocess.Popen(["python3", "-m",  "visdom.server", "-port", "8098"])
         logger = visdom.Visdom()
-        print()
     else:
         logger = []
     print('------------------All preparation was Completed-----------------------')
@@ -151,10 +168,10 @@ def main():
     IsNeedTest = True
     if IsNeedTrain:
         try:
-            model, res_train_loss, res_train_acc, res_val_loss, res_val_acc, res_train_f1, res_val_f1 = train_model(settings, LSTM_Model, optimizer, loss_fn, settings.config["ModelParams"]["epochs"], scheduler, train_loader, val_loader, logger)
+            model, res_train_loss, res_train_acc, res_val_loss, res_val_acc, res_train_f1, res_val_f1 = train_model(settings, Model, optimizer, loss_fn, settings.config["ModelParams"]["epochs"], scheduler, train_loader, val_loader, logger)
         except Exception as e:
-            #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '\\models\\LSTM_Model_Error.pt')
-            #torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '\\models\\Jitted_LSTM_Model_Error.pt')
+            #torch.save(model.state_dict(), settings.config["System"]["OutputFileDir"] + '\\models\\Model_Error.pt')
+            #torch.jit.script(model).save(settings.config["System"]["OutputFileDir"] + '\\models\\Jitted_Model_Error.pt')
             print(e)
 
     if IsNeedTest:
@@ -170,7 +187,7 @@ def main():
         test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=settings.config["ModelParams"]["batch_size"], shuffle=False)
         from engine import test
         print('Load Jitted Model...')
-        tuned_model = torch.jit.load(settings.config["System"]["OutputFileDir"] + '/models/Jitted_LSTM_Model.pt')
+        tuned_model = torch.jit.load(settings.config["System"]["OutputFileDir"] + '/models/Jitted_Model.pt')
         print('Load Jitted Model completed!')
         tuned_model.to(DEVICE)
 
